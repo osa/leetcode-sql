@@ -68,6 +68,9 @@ insert into Employee (id, salary) values ('3', '300')
 
 /* Solution */
 
+
+declare @SecondHighestSalary int
+
 -- rank based on unique salary number
 ;with RankedSalary as (
 	select 
@@ -75,20 +78,8 @@ insert into Employee (id, salary) values ('3', '300')
 		dense_rank() over (order by salary asc) as rnk
 	from Employee
 )
-select salary as SecondHighestSalary 
+select @SecondHighestSalary=salary 
 from RankedSalary
 where rnk = 2
 
-
-
--- rank ignoring uniqueness
-;with RankedSalary as (
-	select 
-		salary,
-		row_number() over (order by salary asc) as rnk
-	from Employee
-)
-select salary as SecondHighestSalary 
-from RankedSalary
-where rnk = 2
-
+select @SecondHighestSalary SecondHighestSalary
